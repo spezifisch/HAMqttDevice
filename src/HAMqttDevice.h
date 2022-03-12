@@ -25,6 +25,7 @@ private:
     // Device proprieties
     const String _name;
     const DeviceType _type;
+    const String _nodeID;
 
     String _identifier;
     String _topic;
@@ -49,7 +50,8 @@ public:
     HAMqttDevice(
         const String &name,
         const DeviceType type,
-        const String &haMQTTPrefix = "ha");
+        const String &haMQTTPrefix = "ha",
+        const String &nodeID = "");
 
     ~HAMqttDevice();
 

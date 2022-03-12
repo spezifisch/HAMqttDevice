@@ -11,7 +11,7 @@
     "repository":
     {
       "type": "git",
-      "url": "https://github.com/plapointe6/HAMqttDevice.git"
+      "url": "https://github.com/spezifisch/HAMqttDevice.git"
     },
     "version": "1.0.0",
     "frameworks": "arduino",

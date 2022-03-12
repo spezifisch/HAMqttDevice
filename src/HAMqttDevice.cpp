@@ -3,8 +3,10 @@
 HAMqttDevice::HAMqttDevice(
     const String &name,
     const DeviceType type,
-    const String &haMQTTPrefix) : _name(name),
-                                  _type(type)
+    const String &haMQTTPrefix,
+    const String &nodeID) : _name(name),
+                            _type(type),
+                            _nodeID(nodeID)
 {
     // Id = name to lower case replacing spaces by underscore (ex: name="Kitchen Light" -> id="kitchen_light")
     _identifier = name;
@@ -12,7 +14,13 @@ HAMqttDevice::HAMqttDevice(
     _identifier.toLowerCase();
 
     // Define the MQTT topic of the device
-    _topic = haMQTTPrefix + '/' + deviceTypeToStr(_type) + '/' + _identifier;
+    // see: https://www.home-assistant.io/docs/mqtt/discovery/#discovery-topic
+    // topic format: <discovery_prefix>/<component>/[<node_id>/]<object_id>/config
+    if (_nodeID.length() == 0) {
+        _topic = haMQTTPrefix + '/' + deviceTypeToStr(_type) + '/' + _identifier;
+    } else {
+        _topic = haMQTTPrefix + '/' + deviceTypeToStr(_type) + '/' + _nodeID + '/' + _identifier;
+    }
 
     // Preconfigure mandatory config vars that we already know
     addConfigVar("~", _topic);
@@ -28,6 +36,7 @@ HAMqttDevice::HAMqttDevice(
     case DeviceType::LOCK:
     case DeviceType::SWITCH:
         enableCommandTopic();
+        break;
     default:
         break;
     }
@@ -43,6 +52,7 @@ HAMqttDevice::HAMqttDevice(
     case DeviceType::SENSOR:
     case DeviceType::SWITCH:
         enableStateTopic();
+        break;
     default:
         break;
     }
